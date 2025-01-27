@@ -1,13 +1,18 @@
 from django.shortcuts import render, get_object_or_404
 from django.http import Http404
 from django.utils import timezone
+from django.core.paginator import Paginator
 
 from .models import Post
 
 
 # Create your views here.
 def post_list(request):
-    posts = Post.published.all()
+    posts_list = Post.published.all()
+    paginator = Paginator(posts_list, 1)
+    page_number = request.GET.get('page', 1)
+    posts = paginator.page(page_number)
+
     return render(request, 'post/list.html', {'posts': posts})
 
 
